@@ -32,19 +32,78 @@ const map = new maplibregl.Map({
 
   // Xử lý hiển thị dropdown
 function myFunction() {
-  document.getElementById("myDropdown").classList.toggle("show");
+  let dropdown = document.getElementById("myDropdown");
+  dropdown.classList.toggle("show");
+
+  if (dropdown.classList.contains("show")) {
+      dropdown.style.opacity = "1";
+      dropdown.style.transform = "translateY(0)";
+  } else {
+      dropdown.style.opacity = "0";
+      dropdown.style.transform = "translateY(-10px)";
+  }
 }
 
 // Đóng dropdown nếu bấm ra ngoài
-window.onclick = function(event) {
-  if (!event.target.matches('.dropbtn')) {
-      let dropdowns = document.getElementsByClassName("dropdown-content");
-      for (let i = 0; i < dropdowns.length; i++) {
-          let openDropdown = dropdowns[i];
-          if (openDropdown.classList.contains("show")) {
-              openDropdown.classList.remove("show");
-          }
+window.onclick = function (event) {
+  if (!event.target.matches(".dropbtn")) {
+      let dropdown = document.getElementById("myDropdown");
+      if (dropdown.classList.contains("show")) {
+          dropdown.classList.remove("show");
+          dropdown.style.opacity = "0";
+          dropdown.style.transform = "translateY(-10px)";
       }
   }
 };
 
+// Chức năng vẽ hình khi click vào "Link 1"
+let drawing = false;
+let coordinates = [];
+
+document.getElementById("drawPolygon").addEventListener("click", function () {
+  drawing = true;
+  coordinates = [];
+  alert("Nhấp vào bản đồ để tạo các điểm. Click đúp để hoàn thành hình.");
+});
+
+map.on("click", function (e) {
+  if (!drawing) return;
+
+  let lngLat = [e.lngLat.lng, e.lngLat.lat];
+  coordinates.push(lngLat);
+  console.log("Điểm được thêm:", lngLat);
+
+  // Vẽ marker tại mỗi điểm click
+  new maplibregl.Marker({ color: "blue" }).setLngLat(lngLat).addTo(map);
+});
+
+map.on("dblclick", function () {
+  if (!drawing || coordinates.length < 3) return;
+
+  // Đóng polygon
+  coordinates.push(coordinates[0]); // Kết nối điểm đầu với điểm cuối
+
+  // Vẽ polygon trên bản đồ
+  map.addLayer({
+      id: "polygon-layer",
+      type: "fill",
+      source: {
+          type: "geojson",
+          data: {
+              type: "Feature",
+              geometry: {
+                  type: "Polygon",
+                  coordinates: [coordinates],
+              },
+          },
+      },
+      layout: {},
+      paint: {
+          "fill-color": "#ff0000",
+          "fill-opacity": 0.5,
+      },
+  });
+
+  console.log("Hoàn thành vẽ hình:", coordinates);
+  drawing = false;
+});
