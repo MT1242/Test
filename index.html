@@ -9,13 +9,13 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/src/css/style.css" />
-    <title>Document</title>
+    <title>{{Voyager::setting('site.title')}}</title>
   </head>
   <body>
     <div class="dropdown">
-      <button onclick="myFunction()" class="dropbtn">Dropdown</button>
+      <button onclick="myFunction()" class="dropbtn">Danh sách các</button>
       <div id="myDropdown" class="dropdown-content">
-        <a href="#">Link 1</a>
+        <a href="#" id="drawPolygon">Vẽ Hình</a>
         <a href="#">Link 2</a>
         <a href="#">Link 3</a>
       </div>
