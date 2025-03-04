@@ -1,36 +1,38 @@
 
 // Khởi tạo bản đồ với vị trí mặc định
 const map = new maplibregl.Map({
-    style: "https://tiles.openfreemap.org/styles/liberty",
-    center: [13.388, 52.517], // Vị trí mặc định
-    zoom: 19.5,
-    container: "map",
-  });
+  style: "https://tiles.openfreemap.org/styles/liberty",
+  center: [105.854444, 21.028511], // Vị trí mặc định (Hà Nội)
+  zoom: 19.5,
+  container: "map",
+});
 
-  // Kiểm tra xem trình duyệt có hỗ trợ Geolocation không
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
+// Kiểm tra xem trình duyệt có hỗ trợ Geolocation không
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(
       (position) => {
-        const userLocation = [
-          position.coords.longitude,
-          position.coords.latitude,
-        ];
+          const userLocation = [
+              position.coords.longitude,
+              position.coords.latitude,
+          ];
 
-        // Đặt vị trí của người dùng làm trung tâm bản đồ
-        map.setCenter(userLocation);
+          // Đặt vị trí của người dùng làm trung tâm bản đồ
+          map.setCenter(userLocation);
 
-        // Thêm marker để hiển thị vị trí của người dùng
-        new maplibregl.Marker().setLngLat(userLocation).addTo(map);
+          // Thêm marker để hiển thị vị trí của người dùng
+          new maplibregl.Marker({ color: "red" })
+              .setLngLat(userLocation)
+              .addTo(map);
       },
       (error) => {
-        console.error("Lỗi khi lấy vị trí:", error);
+          console.error("Lỗi khi lấy vị trí:", error);
       }
-    );
-  } else {
-    console.error("Trình duyệt không hỗ trợ Geolocation");
-  }
+  );
+} else {
+  console.error("Trình duyệt không hỗ trợ Geolocation");
+}
 
-  // Xử lý hiển thị dropdown
+// Xử lý hiển thị dropdown với hiệu ứng mượt mà
 function myFunction() {
   let dropdown = document.getElementById("myDropdown");
   dropdown.classList.toggle("show");
@@ -85,7 +87,7 @@ map.on("dblclick", function () {
 
   // Vẽ polygon trên bản đồ
   map.addLayer({
-      id: "polygon-layer",
+      id: "polygon-ưefwefiwh",
       type: "fill",
       source: {
           type: "geojson",
